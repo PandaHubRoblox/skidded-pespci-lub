@@ -1,6 +1,6 @@
 local API = {}
-
-
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+ local Weapons = ReplicatedStorage.Weapons
 API.GunMods = {}
 API.OriginalValues = {
 	FireRate = {},
@@ -12,6 +12,7 @@ API.OriginalValues = {
 }
 
 API.Util = {}
+API.mainEnabled = false  -- Variable to keep track of whether mods are enabled
 
 --// Utility Functions
 function API.Util.setChildValue(weapon, childName, value)
@@ -49,9 +50,10 @@ function API.Util.restoreSpreadValues(spread, values)
 		subSpread.Value = values[subSpread.Name]
 	end
 end
---// GunMod Functions
 
-function API.GunMods.noFireRate(Weapons, enable)
+--// GunMod Functions
+function API.GunMods.noFireRate(enable)
+	if not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		if enable then
 			API.Util.saveOriginalValue(weapon, "FireRate", API.OriginalValues.FireRate)
@@ -62,7 +64,8 @@ function API.GunMods.noFireRate(Weapons, enable)
 	end
 end
 
-function API.GunMods.noSpread(Weapons, enable)
+function API.GunMods.noSpread(enable)
+	if not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		local spread = weapon:FindFirstChild("Spread")
 		if spread then
@@ -86,7 +89,8 @@ function API.GunMods.noSpread(Weapons, enable)
 	end
 end
 
-function API.GunMods.instantReloadTime(Weapons, enable)
+function API.GunMods.instantReloadTime(enable)
+	if not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		if enable then
 			API.Util.saveOriginalValue(weapon, "ReloadTime", API.OriginalValues.ReloadTime)
@@ -97,7 +101,8 @@ function API.GunMods.instantReloadTime(Weapons, enable)
 	end
 end
 
-function API.GunMods.instantEquipTime(Weapons, enable)
+function API.GunMods.instantEquipTime(enable)
+	if not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		if enable then
 			API.Util.saveOriginalValue(weapon, "EquipTime", API.OriginalValues.EquipTime)
@@ -108,7 +113,8 @@ function API.GunMods.instantEquipTime(Weapons, enable)
 	end
 end
 
-function API.GunMods.infiniteAmmo(Weapons, enable)
+function API.GunMods.infiniteAmmo(enable)
+	if not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		if enable then
 			API.Util.saveOriginalValue(weapon, "Ammo", API.OriginalValues.Ammo)
@@ -122,5 +128,14 @@ function API.GunMods.infiniteAmmo(Weapons, enable)
 	end
 end
 
-return API
 
+function API.toggleMods(enable)
+	API.mainEnabled = enable
+	API.GunMods.noFireRate(Weapons, enable)
+	API.GunMods.noSpread(Weapons, enable)
+	API.GunMods.instantReloadTime(Weapons, enable)
+	API.GunMods.instantEquipTime(Weapons, enable)
+	API.GunMods.infiniteAmmo(Weapons, enable)
+end
+
+return API
