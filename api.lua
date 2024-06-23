@@ -63,9 +63,9 @@ end
 --// GunMod Functions
 function API.GunMods.noFireRate(enable)
 	API.ModStatus.noFireRate = enable
-	if not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		if enable then
+			if not API.mainEnabled then return end
 			API.Util.setChildValue(weapon, "FireRate", 0)
 		else
 			API.Util.setChildValue(weapon, "FireRate", API.OriginalValues.FireRate[weapon.Name])
@@ -75,11 +75,12 @@ end
 
 function API.GunMods.noSpread(enable)
 	API.ModStatus.noSpread = enable
-	if not API.mainEnabled then return end
+
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		local spread = weapon:FindFirstChild("Spread")
 		if spread then
 			if enable then
+				if not API.mainEnabled then return end
 				spread.Value = 0
 				API.Util.setSpreadValues(spread, 0)
 			else
@@ -95,9 +96,10 @@ end
 
 function API.GunMods.instantReloadTime(enable)
 	API.ModStatus.instantReloadTime = enable
-	if not API.mainEnabled then return end
+	
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		if enable then
+			if not API.mainEnabled then return end
 			API.Util.setChildValue(weapon, "ReloadTime", 0.05)
 		else
 			API.Util.setChildValue(weapon, "ReloadTime", API.OriginalValues.ReloadTime[weapon.Name])
@@ -107,9 +109,9 @@ end
 
 function API.GunMods.instantEquipTime(enable)
 	API.ModStatus.instantEquipTime = enable
-	if not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		if enable then
+			if not API.mainEnabled then return end
 			API.Util.setChildValue(weapon, "EquipTime", 0.05)
 		else
 			API.Util.setChildValue(weapon, "EquipTime", API.OriginalValues.EquipTime[weapon.Name])
@@ -119,9 +121,10 @@ end
 
 function API.GunMods.infiniteAmmo(enable)
 	API.ModStatus.infiniteAmmo = enable
-	if not API.mainEnabled then return end
+	
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		if enable then
+			if not API.mainEnabled then return end
 			print("enabling infinite ammo")
 			API.Util.setChildValue(weapon, "Ammo", 9999999999)
 			API.Util.setChildValue(weapon, "StoredAmmo", 9999999999)
@@ -137,12 +140,12 @@ end
 function API.GunMods.SaveOriginalValues()
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		API.Util.saveOriginalValue(weapon, "FireRate", API.OriginalValues.FireRate)
-		
+
 		local spread = weapon:FindFirstChild("Spread")
 		if spread then
 			API.Util.saveSpreadValues(spread, API.OriginalValues.Spread, weapon.Name)
 		end
-		
+
 		API.Util.saveOriginalValue(weapon, "ReloadTime", API.OriginalValues.ReloadTime)
 		API.Util.saveOriginalValue(weapon, "EquipTime", API.OriginalValues.EquipTime)
 		API.Util.saveOriginalValue(weapon, "Ammo", API.OriginalValues.Ammo)
