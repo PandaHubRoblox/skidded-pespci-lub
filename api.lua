@@ -62,6 +62,7 @@ end
 
 --// GunMod Functions
 function API.GunMods.noFireRate(enable)
+	print("API.GunMods.noFireRate called with enable =", enable)
 	API.ModStatus.noFireRate = enable
 	if not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
@@ -75,6 +76,7 @@ function API.GunMods.noFireRate(enable)
 end
 
 function API.GunMods.noSpread(enable)
+	print("API.GunMods.noSpread called with enable =", enable)
 	API.ModStatus.noSpread = enable
 	if not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
@@ -101,6 +103,7 @@ function API.GunMods.noSpread(enable)
 end
 
 function API.GunMods.instantReloadTime(enable)
+	print("API.GunMods.instantReloadTime called with enable =", enable)
 	API.ModStatus.instantReloadTime = enable
 	if not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
@@ -114,6 +117,7 @@ function API.GunMods.instantReloadTime(enable)
 end
 
 function API.GunMods.instantEquipTime(enable)
+	print("API.GunMods.instantEquipTime called with enable =", enable)
 	API.ModStatus.instantEquipTime = enable
 	if not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
@@ -127,17 +131,16 @@ function API.GunMods.instantEquipTime(enable)
 end
 
 function API.GunMods.infiniteAmmo(enable)
+	print("API.GunMods.infiniteAmmo called with enable =", enable)
 	API.ModStatus.infiniteAmmo = enable
 	if not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		if enable then
-			print("enabling infintie ammo")
 			API.Util.saveOriginalValue(weapon, "Ammo", API.OriginalValues.Ammo)
 			API.Util.saveOriginalValue(weapon, "StoredAmmo", API.OriginalValues.StoredAmmo)
 			API.Util.setChildValue(weapon, "Ammo", 9999999999)
 			API.Util.setChildValue(weapon, "StoredAmmo", 9999999999)
 		else
-			print("disabling infinite ammo")
 			API.Util.setChildValue(weapon, "Ammo", API.OriginalValues.Ammo[weapon.Name])
 			API.Util.setChildValue(weapon, "StoredAmmo", API.OriginalValues.StoredAmmo[weapon.Name])
 		end
@@ -146,10 +149,10 @@ end
 
 --// Main Function to Enable/Disable All Mods
 function API.toggleMods(enable)
+	print("API.toggleMods called with enable =", enable)
 	API.mainEnabled = enable
 
 	if enable then
-		print("enabling mods")
 		if API.ModStatus.noFireRate then
 			API.GunMods.noFireRate(true)
 		end
@@ -166,7 +169,7 @@ function API.toggleMods(enable)
 			API.GunMods.infiniteAmmo(true)
 		end
 	else
-		print("disabling mods")
+		print("Disabling all gun mods")
 		API.GunMods.noFireRate(false)
 		API.GunMods.noSpread(false)
 		API.GunMods.instantReloadTime(false)
