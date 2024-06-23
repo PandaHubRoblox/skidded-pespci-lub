@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Weapons = ReplicatedStorage.Weapons
-
+local localPlayer = game.Players.LocalPlayer
+local cbClient = getsenv(game.Players.LocalPlayer:WaitForChild("Client"))
 local API = {}
 
 API.GunMods = {}
@@ -20,7 +21,8 @@ API.ModStatus = {
 	noSpread = false,
 	instantReloadTime = false,
 	instantEquipTime = false,
-	infiniteAmmo = false
+	infiniteAmmo = false,
+	NoRecoil = false
 }
 
 --// Utility Functions
@@ -136,6 +138,22 @@ function API.GunMods.infiniteAmmo(enable)
 	end
 end
 
+function API.GunMods.removeRecoil(enable)
+	API.ModStatus.removeRecoil = enable
+
+
+	if enable then
+		if not API.mainEnabled then return end
+		-- Remove recoil
+		cbClient.RecoilX = 0
+		cbClient.RecoilY = 0
+	else
+		-- Restore original values
+		cbClient.RecoilX = API.OriginalValues.RecoilX[localPlayer.Name] or cbClient.RecoilX
+		cbClient.RecoilY = API.OriginalValues.RecoilY[localPlayer.Name] or cbClient.RecoilY
+	end
+end
+
 --// Function to Save Original Values of All Mods
 function API.GunMods.SaveOriginalValues()
 	for _, weapon in ipairs(Weapons:GetChildren()) do
@@ -150,6 +168,8 @@ function API.GunMods.SaveOriginalValues()
 		API.Util.saveOriginalValue(weapon, "EquipTime", API.OriginalValues.EquipTime)
 		API.Util.saveOriginalValue(weapon, "Ammo", API.OriginalValues.Ammo)
 		API.Util.saveOriginalValue(weapon, "StoredAmmo", API.OriginalValues.StoredAmmo)
+		API.OriginalValues.RecoilX[localPlayer.Name] = cbClient.RecoilX
+		API.OriginalValues.RecoilY[localPlayer.Name] = cbClient.RecoilY
 	end
 end
 
@@ -174,6 +194,9 @@ function API.toggleMods(enable)
 		if API.ModStatus.infiniteAmmo then
 			API.GunMods.infiniteAmmo(true)
 		end
+		if API.ModStatus.removeRecoil then
+			API.GunMods.removeRecoil(true)
+		end
 	else
 		print("disabling mods")
 		API.GunMods.noFireRate(false)
@@ -181,6 +204,7 @@ function API.toggleMods(enable)
 		API.GunMods.instantReloadTime(false)
 		API.GunMods.instantEquipTime(false)
 		API.GunMods.infiniteAmmo(false)
+		API.GunMods.removeRecoil(false)
 	end
 end
 
