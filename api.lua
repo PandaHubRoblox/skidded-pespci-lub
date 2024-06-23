@@ -62,9 +62,7 @@ end
 
 --// GunMod Functions
 function API.GunMods.noFireRate(enable)
-	print("API.GunMods.noFireRate called with enable =", enable)
 	API.ModStatus.noFireRate = enable
-	if enable and not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		if enable then
 			API.Util.saveOriginalValue(weapon, "FireRate", API.OriginalValues.FireRate)
@@ -76,9 +74,7 @@ function API.GunMods.noFireRate(enable)
 end
 
 function API.GunMods.noSpread(enable)
-	print("API.GunMods.noSpread called with enable =", enable)
 	API.ModStatus.noSpread = enable
-	if enable and not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		local spread = weapon:FindFirstChild("Spread")
 		if spread then
@@ -103,9 +99,7 @@ function API.GunMods.noSpread(enable)
 end
 
 function API.GunMods.instantReloadTime(enable)
-	print("API.GunMods.instantReloadTime called with enable =", enable)
 	API.ModStatus.instantReloadTime = enable
-	if enable and not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		if enable then
 			API.Util.saveOriginalValue(weapon, "ReloadTime", API.OriginalValues.ReloadTime)
@@ -117,9 +111,7 @@ function API.GunMods.instantReloadTime(enable)
 end
 
 function API.GunMods.instantEquipTime(enable)
-	print("API.GunMods.instantEquipTime called with enable =", enable)
 	API.ModStatus.instantEquipTime = enable
-	if enable and not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		if enable then
 			API.Util.saveOriginalValue(weapon, "EquipTime", API.OriginalValues.EquipTime)
@@ -131,9 +123,7 @@ function API.GunMods.instantEquipTime(enable)
 end
 
 function API.GunMods.infiniteAmmo(enable)
-	print("API.GunMods.infiniteAmmo called with enable =", enable)
 	API.ModStatus.infiniteAmmo = enable
-	if enable and not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		if enable then
 			API.Util.saveOriginalValue(weapon, "Ammo", API.OriginalValues.Ammo)
@@ -149,10 +139,10 @@ end
 
 --// Main Function to Enable/Disable All Mods
 function API.toggleMods(enable)
-	print("API.toggleMods called with enable =", enable)
 	API.mainEnabled = enable
 
 	if enable then
+		print("enabling mods")
 		if API.ModStatus.noFireRate then
 			API.GunMods.noFireRate(true)
 		end
@@ -169,7 +159,7 @@ function API.toggleMods(enable)
 			API.GunMods.infiniteAmmo(true)
 		end
 	else
-		print("Disabling all gun mods")
+		print("disabling mods")
 		API.GunMods.noFireRate(false)
 		API.GunMods.noSpread(false)
 		API.GunMods.instantReloadTime(false)
