@@ -64,7 +64,7 @@ end
 function API.GunMods.noFireRate(enable)
 	print("API.GunMods.noFireRate called with enable =", enable)
 	API.ModStatus.noFireRate = enable
-	if not API.mainEnabled then return end
+	if enable and not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		if enable then
 			API.Util.saveOriginalValue(weapon, "FireRate", API.OriginalValues.FireRate)
@@ -78,7 +78,7 @@ end
 function API.GunMods.noSpread(enable)
 	print("API.GunMods.noSpread called with enable =", enable)
 	API.ModStatus.noSpread = enable
-	if not API.mainEnabled then return end
+	if enable and not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		local spread = weapon:FindFirstChild("Spread")
 		if spread then
@@ -105,7 +105,7 @@ end
 function API.GunMods.instantReloadTime(enable)
 	print("API.GunMods.instantReloadTime called with enable =", enable)
 	API.ModStatus.instantReloadTime = enable
-	if not API.mainEnabled then return end
+	if enable and not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		if enable then
 			API.Util.saveOriginalValue(weapon, "ReloadTime", API.OriginalValues.ReloadTime)
@@ -119,7 +119,7 @@ end
 function API.GunMods.instantEquipTime(enable)
 	print("API.GunMods.instantEquipTime called with enable =", enable)
 	API.ModStatus.instantEquipTime = enable
-	if not API.mainEnabled then return end
+	if enable and not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		if enable then
 			API.Util.saveOriginalValue(weapon, "EquipTime", API.OriginalValues.EquipTime)
@@ -133,7 +133,7 @@ end
 function API.GunMods.infiniteAmmo(enable)
 	print("API.GunMods.infiniteAmmo called with enable =", enable)
 	API.ModStatus.infiniteAmmo = enable
-	if not API.mainEnabled then return end
+	if enable and not API.mainEnabled then return end
 	for _, weapon in ipairs(Weapons:GetChildren()) do
 		if enable then
 			API.Util.saveOriginalValue(weapon, "Ammo", API.OriginalValues.Ammo)
