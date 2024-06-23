@@ -1,7 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Weapons = ReplicatedStorage.Weapons
 local localPlayer = game.Players.LocalPlayer
-local cbClient = getsenv(game.Players.LocalPlayer:WaitForChild("Client"))
 local API = {}
 
 API.GunMods = {}
@@ -11,7 +10,8 @@ API.OriginalValues = {
 	ReloadTime = {},
 	EquipTime = {},
 	Ammo = {},
-	StoredAmmo = {}
+	StoredAmmo = {},
+	Recoil = {}
 }
 
 API.Util = {}
@@ -22,7 +22,7 @@ API.ModStatus = {
 	instantReloadTime = false,
 	instantEquipTime = false,
 	infiniteAmmo = false,
-	NoRecoil = false
+	removeRecoil = false
 }
 
 --// Utility Functions
@@ -140,17 +140,20 @@ end
 
 function API.GunMods.removeRecoil(enable)
 	API.ModStatus.removeRecoil = enable
-
-
-	if enable then
-		if not API.mainEnabled then return end
-		-- Remove recoil
-		cbClient.RecoilX = 0
-		cbClient.RecoilY = 0
-	else
-		-- Restore original values
-		cbClient.RecoilX = API.OriginalValues.RecoilX[localPlayer.Name] or cbClient.RecoilX
-		cbClient.RecoilY = API.OriginalValues.RecoilY[localPlayer.Name] or cbClient.RecoilY
+	for _, weapon in ipairs(Weapons:GetChildren()) do
+		local spread = weapon:FindFirstChild("Spread")
+		if spread then
+			local recoil = spread:FindFirstChild("Recoil")
+			if recoil then
+				if enable then
+					if not API.mainEnabled then return end
+					API.Util.saveOriginalValue(spread, "Recoil", API.OriginalValues.Recoil)
+					recoil.Value = 0
+				else
+					API.Util.setChildValue(spread, "Recoil", API.OriginalValues.Recoil[weapon.Name])
+				end
+			end
+		end
 	end
 end
 
@@ -162,14 +165,16 @@ function API.GunMods.SaveOriginalValues()
 		local spread = weapon:FindFirstChild("Spread")
 		if spread then
 			API.Util.saveSpreadValues(spread, API.OriginalValues.Spread, weapon.Name)
+			local recoil = spread:FindFirstChild("Recoil")
+			if recoil then
+				API.Util.saveOriginalValue(spread, "Recoil", API.OriginalValues.Recoil)
+			end
 		end
 
 		API.Util.saveOriginalValue(weapon, "ReloadTime", API.OriginalValues.ReloadTime)
 		API.Util.saveOriginalValue(weapon, "EquipTime", API.OriginalValues.EquipTime)
 		API.Util.saveOriginalValue(weapon, "Ammo", API.OriginalValues.Ammo)
 		API.Util.saveOriginalValue(weapon, "StoredAmmo", API.OriginalValues.StoredAmmo)
-		API.OriginalValues.RecoilX[localPlayer.Name] = cbClient.RecoilX
-		API.OriginalValues.RecoilY[localPlayer.Name] = cbClient.RecoilY
 	end
 end
 
